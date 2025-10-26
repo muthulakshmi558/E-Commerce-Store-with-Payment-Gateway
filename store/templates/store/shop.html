@@ -1,0 +1,53 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-6">
+  <!-- categories -->
+  <div class="flex space-x-4 py-6">
+    <a href="{% url 'store:shop' %}" class="px-3 py-2 rounded bg-white border">All</a>
+    {% for c in categories %}
+      <a href="?category={{ c.slug }}" class="px-3 py-2 rounded bg-white border">{{ c.name }}</a>
+    {% endfor %}
+  </div>
+
+  <!-- products grid -->
+  <div class="grid grid-cols-3 gap-6">
+    {% for p in products %}
+      <div class="bg-white rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 animate-card-pop">
+        <img src="{{ p.image.url }}" alt="{{ p.name }}" class="w-full h-56 object-cover">
+        <div class="p-4">
+          <h3 class="font-semibold">{{ p.name }}</h3>
+          <p class="mt-2 font-bold">₹{{ p.price }}</p>
+          <div class="mt-3">
+            <button data-product-id="{{ p.id }}" class="add-to-cart px-4 py-2 rounded bg-primaryPink text-white">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.querySelectorAll('.add-to-cart').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const pid = this.dataset.productId;
+      fetch("{% url 'store:add_to_cart' %}", {
+        method:'POST',
+        headers:{
+          'X-CSRFToken': window.csrfToken,
+          'Content-Type':'application/x-www-form-urlencoded'
+        },
+        body: 'product_id='+pid+'&quantity=1'
+      }).then(r=>r.json()).then(data=>{
+        if(data.status === 'ok'){
+          document.getElementById('cart-count').innerText = data.cart_count;
+          // small animation: pulse
+          document.getElementById('cart-count').classList.add('animate-pulse');
+          setTimeout(()=>document.getElementById('cart-count').classList.remove('animate-pulse'), 600);
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

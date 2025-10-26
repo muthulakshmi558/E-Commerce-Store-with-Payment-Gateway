@@ -1,0 +1,14 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-6 text-center">
+  <svg class="mx-auto w-16 h-16 text-green-500" fill="none" stroke="currentColor" stroke-width="2"
+       viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+  </svg>
+  <h1 class="text-3xl font-bold mt-4 text-green-600">Payment Successful!</h1>
+  <p class="mt-2 text-lg">Thank you {{ order.first_name }}! Your order #{{ order.id }} has been placed.</p>
+  <a href="{% url 'store:invoice_pdf' order.id %}" class="mt-6 inline-block px-6 py-3 bg-primaryPink text-white rounded-lg hover:bg-pink-600">
+    Download Invoice
+  </a>
+</div>
+{% endblock %}

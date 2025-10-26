@@ -1,0 +1,63 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-6 grid grid-cols-3 gap-8">
+  <div class="col-span-2">
+    {% for item in items %}
+      <div class="flex items-center gap-4 p-4 border rounded mb-4">
+        <img src="{{ item.product.image.url }}" class="w-24 h-24 object-cover" alt="">
+        <div class="flex-1">
+          <h4 class="font-semibold">{{ item.product.name }}</h4>
+          <p>₹{{ item.unit_price }}</p>
+          <div class="mt-2 flex items-center space-x-2">
+            <button class="qty-btn px-2 py-1 border" data-action="decrement" data-pid="{{ item.product.id }}">-</button>
+            <span id="qty-{{ item.product.id }}">{{ item.quantity }}</span>
+            <button class="qty-btn px-2 py-1 border" data-action="increment" data-pid="{{ item.product.id }}">+</button>
+            <button class="delete-btn ml-4 text-red-600" data-pid="{{ item.product.id }}">Delete</button>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>Your cart is empty.</p>
+    {% endfor %}
+  </div>
+
+  <div class="col-span-1 p-4 border rounded">
+    <h3 class="font-bold">Summary</h3>
+    <p>Subtotal: ₹{{ subtotal }}</p>
+    <p>GST: ₹{{ total_gst }}</p>
+    <p class="font-bold">Total: ₹{{ total }}</p>
+    <a href="{% url 'store:checkout' %}" class="inline-block mt-4 px-4 py-2 bg-primaryPink text-white rounded">Buy Now</a>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+  document.querySelectorAll('.qty-btn').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const action = this.dataset.action;
+      const pid = this.dataset.pid;
+      const fd = new FormData();
+      fd.append('action', action);
+      fd.append('product_id', pid);
+      fetch("{% url 'store:update_cart' %}", {
+        method:'POST',
+        headers: {'X-CSRFToken': window.csrfToken},
+        body: fd
+      }).then(r=>r.json()).then(data=>{
+        if(data.status==='ok'){ location.reload(); }
+      });
+    });
+  });
+  document.querySelectorAll('.delete-btn').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const pid = this.dataset.pid;
+      const fd = new FormData();
+      fd.append('action', 'delete');
+      fd.append('product_id', pid);
+      fetch("{% url 'store:update_cart' %}", { method:'POST', headers:{'X-CSRFToken': window.csrfToken}, body: fd })
+      .then(r=>r.json()).then(data=>{ if(data.status==='ok') location.reload();});
+    });
+  });
+</script>
+{% endblock %}
+{% endblock %}

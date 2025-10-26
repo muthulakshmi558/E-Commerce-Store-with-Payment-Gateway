@@ -1,0 +1,19 @@
+
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="bg-white py-20">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+    <div class="w-1/2">
+      <h1 class="text-4xl font-bold text-primaryPink">Welcome to MyShop</h1>
+      <p class="mt-4 text-gray-700">Shopping for the latest styles — happy to see you!</p>
+      <a href="{% url 'store:shop' %}" class="mt-6 inline-block px-6 py-3 rounded-md bg-accentYellow font-semibold">Shop Now</a>
+    </div>
+    <div class="w-1/2">
+      <!-- right side image or hero -->
+      <img src="{% static 'store/images/hero.jpg' %}" alt="hero" class="w-full">
+    </div>
+  </div>
+</section>
+{% endblock %}

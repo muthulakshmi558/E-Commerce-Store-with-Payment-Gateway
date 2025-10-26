@@ -1,0 +1,66 @@
+{% load static %}   <!-- ✅ Add this line at the very top -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}E-Commerce{% endblock %}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="{% static 'store/css/output.css' %}" rel="stylesheet">
+  <script>window.csrfToken = '{{ csrf_token }}'</script>
+  <style>
+    /* minor custom styles */
+  </style>
+</head>
+<body class="bg-white font-poppins">
+  <!-- fixed navbar -->
+  <nav class="fixed top-0 left-0 right-0 bg-white shadow z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="{% url 'store:home' %}" class="font-bold text-xl text-primaryPink">MyShop</a>
+      <div class="flex items-center space-x-4">
+        <a href="{% url 'store:shop' %}" class="hover:text-gray-700">Shop</a>
+        <a href="{% url 'store:cart' %}" id="cart-link" class="relative">
+          Cart <span id="cart-count" class="ml-1 bg-accentYellow rounded-full px-2 text-sm">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-20">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- footer -->
+  <footer class="bg-accentYellow text-black mt-12">
+    <div class="max-w-6xl mx-auto px-6 py-8">
+      <div class="grid grid-cols-4 gap-6">
+        <div>
+          <h3 class="font-bold">MyShop</h3>
+          <p>Best store in town</p>
+        </div>
+        <div>
+          <h4>Information</h4>
+          <ul>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Quick Access</h4>
+          <ul><li><a href="#">Shop</a></li></ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>+91 9876543210</p>
+          <p>info@myshop.com</p>
+        </div>
+      </div>
+      <div class="text-center mt-6">© {{ now|date:"Y" }} MyShop</div>
+    </div>
+  </footer>
+
+  <script src="{% static 'store/js/app.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
